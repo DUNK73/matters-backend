@@ -19,12 +19,14 @@ const transporter = nodemailer.createTransport({
 @Injectable()
 export class MailService {
 
-  getHello(): string {
-    return 'Hello World!';
-  }
+  public readonly mailToArray = ['z7dank3@yandex.ru','z7dunk3@gmail.com'];
+
+  public getMailTo(): string {
+    return this.mailToArray.join(';');
+  } 
 
   // Функция отправки письма
-  async sendEmail(to, subject, text, html) {
+  async sendEmail(to: string, subject: string, text: string, html: string) {
     const mailOptions = {
       from: process.env.YANDEX_EMAIL, // ВАЖНО: должен совпадать с auth.user
       to: to,
@@ -41,17 +43,6 @@ export class MailService {
       console.error('❌ Ошибка отправки:', error.message);
       throw error;
     }
-  }
-
-
-  // Пример использования
-  async main() {
-    await this.sendEmail(
-      'z7dank3@yandex.ru',
-      'Тестовое письмо из Node.js',
-      'Это текстовая версия письма',
-      '<h1>Привет!</h1><p>Это HTML версия письма из Node.js через Yandex Mail</p>'
-    );
   }
 
 }
