@@ -26,25 +26,41 @@ export class AppController {
   async sendMail(
     @Body()
     data: {
-      email: string,
-      name: string,
-      phone: string,
-      message: string,
+      headers: {
+        title: string;
+      }
+      content: {
+        [key: string]: string;
+      }
     }
   ): Promise<any> {
-    const html = `
-      <p><strong>Имя:</strong> ${data.name}</p>
-      <p><strong>Email:</strong> ${data.email}</p>
-      <p><strong>Телефон:</strong> ${data.phone}</p>
-      <p><strong>Сообщение:</strong> ${data.message}</p>
-    `;
+    // const html = `
+    //   <p><strong>Имя:</strong> ${data.name}</p>
+    //   <p><strong>Email:</strong> ${data.email}</p>
+    //   <p><strong>Телефон:</strong> ${data.phone}</p>
+    //   <p><strong>Сообщение:</strong> ${data.message}</p>
+    // `;
 
-    await this.mailService.sendEmail(
-      'z7dank3@yandex.ru',
-      'Наявка з сайту',
-      `Имя: ${data.name}, Email: ${data.email}, Телефон: ${data.phone}, Сообщение: ${data.message}`,
-      html
-    );
+    // await this.mailService.sendEmail(
+    //   'z7dank3@yandex.ru',
+    //   'Наявка з сайту',
+    //   `Имя: ${data.name}, Email: ${data.email}, Телефон: ${data.phone}, Сообщение: ${data.message}`,
+    //   html
+    // );
+
+
+    let contentTextArray = Object.keys(data.content).map((key) => `${key}: ${data.content[key]}`);
+    let contentText = contentTextArray.join('');
+
+    let contentHtmlArray = Object.keys(data.content).map((key) => `<p><strong>${key}</strong>: ${data.content[key]}</p>`);
+    let contentHtml = contentHtmlArray.join('');
+
+    this.mailService.sendEmail(
+      this.mailService.getMailTo(),
+      `Matters: ${data.headers.title}`,
+      contentText,
+      contentHtml
+    )
 
     return { success: true };
   }
