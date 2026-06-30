@@ -19,11 +19,11 @@ const transporter = nodemailer.createTransport({
 @Injectable()
 export class MailService {
 
-  public readonly mailToArray = ['z7dank3@yandex.ru','z7dunk3@gmail.com'];
+  public readonly mailToArray = ['z7dank3@yandex.ru', 'z7dunk3@gmail.com', 'julia-zakharova_@mail.ru'];
 
   public getMailTo(): string {
     return this.mailToArray.join(';');
-  } 
+  }
 
   // Функция отправки письма
   async sendEmail(to: string, subject: string, text: string, html: string) {
