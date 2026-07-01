@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import * as cors from 'cors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,6 +14,12 @@ async function bootstrap() {
     optionsSuccessStatus: 204,
     credentials: true, // Если нужно передавать куки/авторизацию
   });
+
+  // Используем middleware cors напрямую
+  app.use(cors({
+    origin: '*',
+    credentials: true,
+  }));
 
   await app.listen(process.env.PORT ?? 3002);
 }
