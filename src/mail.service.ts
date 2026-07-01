@@ -43,6 +43,7 @@ export class MailService {
       console.error('❌ Ошибка отправки:', error.message);
       throw error;
     }
+
   }
 
 }

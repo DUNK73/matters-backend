@@ -41,14 +41,14 @@ export class AppController {
     let contentHtmlArray = Object.keys(data.content).map((key) => `<p><strong>${key}</strong>: ${data.content[key]}</p>`);
     let contentHtml = contentHtmlArray.join('');
 
-    this.mailService.sendEmail(
+    let result = await this.mailService.sendEmail(
       this.mailService.getMailTo(),
       `Matters: ${data.headers.title}`,
       contentText,
       contentHtml
     )
 
-    return { success: true };
+    return { success: true, result: result };
   }
 
 }
