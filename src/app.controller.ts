@@ -4,14 +4,18 @@ import { MailService } from './mail.service';
 
 @Controller()
 export class AppController {
-
   constructor(
     private readonly appService: AppService,
     private readonly mailService: MailService,
-  ) { }
+  ) {}
 
   @Get()
   getHello(): string {
+    console.log(`
+      process.env.YANDEX_EMAIL ${process.env.YANDEX_EMAIL}
+      process.env.YANDEX_APP_PASSWORD ${process.env.YANDEX_APP_PASSWORD}
+      `);
+
     return this.appService.getHello();
   }
 
@@ -28,27 +32,29 @@ export class AppController {
     data: {
       headers: {
         title: string;
-      }
+      };
       content: {
         [key: string]: string;
-      }
-    }
+      };
+    },
   ): Promise<any> {
+    const contentTextArray = Object.keys(data.content).map(
+      (key) => `${key}: ${data.content[key]}`,
+    );
+    const contentText = contentTextArray.join('');
 
-    let contentTextArray = Object.keys(data.content).map((key) => `${key}: ${data.content[key]}`);
-    let contentText = contentTextArray.join('');
+    const contentHtmlArray = Object.keys(data.content).map(
+      (key) => `<p><strong>${key}</strong>: ${data.content[key]}</p>`,
+    );
+    const contentHtml = contentHtmlArray.join('');
 
-    let contentHtmlArray = Object.keys(data.content).map((key) => `<p><strong>${key}</strong>: ${data.content[key]}</p>`);
-    let contentHtml = contentHtmlArray.join('');
-
-    let result = await this.mailService.sendEmail(
+    const result = await this.mailService.sendEmail(
       this.mailService.getMailTo(),
       `Matters: ${data.headers.title}`,
       contentText,
-      contentHtml
-    )
+      contentHtml,
+    );
 
     return { success: true, result: result };
   }
-
 }

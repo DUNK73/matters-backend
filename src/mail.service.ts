@@ -1,8 +1,12 @@
+import * as dotenv from 'dotenv';
+import * as path from 'path';
+
 import { Injectable } from '@nestjs/common';
-import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
 
-dotenv.config();
+console.log('__dirname: ',__dirname);
+
+dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 // Создаем транспортер для Yandex
 const transporter = nodemailer.createTransport({
@@ -11,15 +15,17 @@ const transporter = nodemailer.createTransport({
   secure: true, // true для 465 порта (SSL)
   auth: {
     user: process.env.YANDEX_EMAIL,
-    pass: process.env.YANDEX_APP_PASSWORD
-  }
+    pass: process.env.YANDEX_APP_PASSWORD,
+  },
 });
-
 
 @Injectable()
 export class MailService {
-
-  public readonly mailToArray = ['z7dank3@yandex.ru', 'z7dunk3@gmail.com', 'julia-zakharova_@mail.ru'];
+  public readonly mailToArray = [
+    'z7dank3@yandex.ru',
+    'z7dunk3@gmail.com',
+    'julia-zakharova_@mail.ru',
+  ];
 
   public getMailTo(): string {
     return this.mailToArray.join(';');
@@ -32,7 +38,7 @@ export class MailService {
       to: to,
       subject: subject,
       text: text,
-      html: html
+      html: html,
     };
 
     try {
@@ -43,7 +49,5 @@ export class MailService {
       console.error('❌ Ошибка отправки:', error.message);
       throw error;
     }
-
   }
-
 }
